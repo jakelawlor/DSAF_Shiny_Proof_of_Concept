@@ -253,7 +253,6 @@ POC_DtoB<-add_period(POC_DtoB)
 #calculate scaled slopes by Region and Period
 library(dplyr)
 library(broom)
-library(rlang)
 
 #ABUNDANCE
 #estimates scaled change in estimated abundance per year
@@ -438,5 +437,42 @@ merged_coefficients_df <- merged_coefficients_df %>%
       TRUE ~ "Not significant"
     )
   )
-
+ str(merged_coefficients_df)
+ merged_coefficients_df$p.significant <- factor(merged_coefficients_df$p.significant, 
+                          levels = c("Very strong", "Strong","Moderate",  "Not significant"))
+ merged_coefficients_df<-read.csv(here::here("Data/Data_SHinyApp_Proof_of_Concept/Scaled_Slopes_all_indicators.csv"))
+ 
+ #plot
+ ggplot(merged_coefficients_df, 
+        aes(x = estimate, 
+            y = Indicator, 
+            colour = Region,
+            size = p.significant)) +
+   geom_point(position = position_dodge(width = 0.6)) +
+   scale_size_manual(
+     values = c(
+       "Very strong" = 4,   
+       "Strong" = 3,
+       "Moderate" = 2,
+       "Not significant" = 1
+     )
+   ) +
+   geom_errorbar(aes(xmin = conf.low, xmax = conf.high), 
+                 width = 0.2, 
+                 position = position_dodge(width = 0.6),
+                 linewidth = 0.6) +  # fixed bar thickness
+   geom_vline(xintercept = 0, linetype = "dashed", colour = "grey50") +
+   theme_minimal(base_size = 14) +
+   labs(
+     x = "Estimated slope (±95% CI)",
+     y = "",
+     colour = "Region",
+     size = "Significance",
+     title = "2006–2023 Trends"
+   ) +
+   theme(
+     panel.grid.minor = element_blank(),
+     axis.title.y = element_text(margin = margin(r = 10))
+   )
+ 
 write.csv(merged_coefficients_df,(here::here("Data/Data_SHinyApp_Proof_of_Concept/Scaled_Slopes_all_indicators.csv")), row.names = FALSE)

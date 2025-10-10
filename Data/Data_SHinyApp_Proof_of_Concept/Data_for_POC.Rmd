@@ -542,8 +542,42 @@ ggplot(POC_DtoB,
 
 lm slopes for 2006-2023 (the period when the water began warming rapidly), scaled  so that all indicators are in the same units
 
-```{r DtoB data, echo=FALSE}
+```{r slopes data, echo=FALSE}
 Scaled_Slopes<-read.csv(here::here("Data/Data_SHinyApp_Proof_of_Concept/Scaled_Slopes_all_indicators.csv"))
 str(Scaled_Slopes)
+ Scaled_Slopes$p.significant <- factor(Scaled_Slopes$p.significant, 
+                          levels = c("Very strong", "Strong","Moderate",  "Not significant"))
 
+ ggplot(Scaled_Slopes, 
+        aes(x = estimate, 
+            y = Indicator, 
+            colour = Region,
+            size = p.significant)) +
+   geom_point(position = position_dodge(width = 0.6)) +
+   scale_size_manual(
+     values = c(
+       "Very strong" = 4,   
+       "Strong" = 3,
+       "Moderate" = 2,
+       "Not significant" = 1
+     )
+   ) +
+   geom_errorbar(aes(xmin = conf.low, xmax = conf.high), 
+                 width = 0.2, 
+                 position = position_dodge(width = 0.6),
+                 linewidth = 0.6) +  # fixed bar thickness
+   geom_vline(xintercept = 0, linetype = "dashed", colour = "grey50") +
+   theme_minimal(base_size = 14) +
+   labs(
+     x = "Estimated slope (±95% CI)",
+     y = "",
+     colour = "Region",
+     size = "Significance",
+     title = "2006–2023 Trends"
+   ) +
+   theme(
+     panel.grid.minor = element_blank(),
+     axis.title.y = element_text(margin = margin(r = 10))
+   )
 ```
+
