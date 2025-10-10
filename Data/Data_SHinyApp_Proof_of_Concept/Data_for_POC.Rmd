@@ -12,9 +12,9 @@ library(patchwork)
 library(here)
 ```
 
-Assembled in **Prepare data for POC.R**, the **Data_SHinyApp_Proof_of_Concept folder** contains data for the temporal (and spatial where applicable*) trends for the 6 shift indicators, calculated based on Atlantic halibut abundance estimates form SDM output. All data have been subset to spring estimates.
+Assembled in **Prepare data for POC.R**, the **Data_SHinyApp_Proof_of_Concept folder** contains data for the temporal (and spatial where applicable*) timeseries for the 6 shift indicators, calculated based on Atlantic halibut abundance estimates form SDM output. All data have been subset to spring estimates.
 
-1. Abundance*: trend in total estimated abundance  
+1. Abundance*: total annual estimated abundance  
 
 2. Area Occupied: the total area containing 90% of the abundance 
 
@@ -25,6 +25,8 @@ Assembled in **Prepare data for POC.R**, the **Data_SHinyApp_Proof_of_Concept fo
 5. Centre of Gravity*: the average latitude and longitude, weighted by abundance 
 
 6. Distance from COG to shared border : the shortest path (without crossing land) from the COG to the nearest point on the international border 
+
+7. Scaled Slopes:  lm slopes for 2006-2023 (the period when the water began warming rapidly), scaled  so that all indicators are in the same units
 
 ## 1. Abundance 
 
@@ -48,7 +50,7 @@ str(POC_Abundance)
 
 ```
 
-### Trends in Abundance Estimate 
+### Timeseries: Abundance Estimate 
 
 ```{r abundance plot, echo=FALSE, fig.width=6, fig.height=4}
 ggplot(POC_Abundance, 
@@ -94,7 +96,7 @@ str(POC_AO)
 POC_AO_sub<-subset(POC_AO, POC_AO$Threshold ==90)
 ```
 
-### Trends in : Total area occupied ( 90% of abundance), Percent of the total area used, Area Efficiency  
+### Timeseries : Total area occupied ( 90% of abundance), Percent of the total area used, Area Efficiency  
 
 ```{r AO plot, echo=FALSE, fig.width=12, fig.height=4}
 AO1<-ggplot(POC_AO_sub, 
@@ -141,7 +143,7 @@ str(POC_AWD)
 
 ```
 
-### Trends in Abundance-Weighted Depth
+### Timeseries: Abundance-Weighted Depth
 
 ```{r AWD plot, echo=FALSE, fig.width=6, fig.height=4}
 
@@ -180,7 +182,7 @@ RE_DAT<- read.csv(here::here("Data/Data_SHinyApp_Proof_of_Concept/POC_RangeEdge.
 str(RE_DAT)
 ```
 
-### Trends in Leading and Trailing Edges 
+### Timeseries: Leading and Trailing Edges 
 ```{r Range Edge plot, echo=FALSE, warning=FALSE, message=FALSE,  results='hide', fig.width=10, fig.height=9}
 #Prep-work for  mapping Range Edge, copied from 4_FancyFigs_RangeEdgeEAO_KFedits.R (line 439)
 library(sf)
@@ -410,7 +412,7 @@ str(POC_COG)
 
 ```
 
-### Trends in Centre of Gravity (Mean)
+### Timeseries: Centre of Gravity (Mean)
 ```{r COG plot, echo=FALSE, warning=FALSE, message=FALSE, fig.width=10, fig.height=9}
 
 POC_COG_sf <- st_as_sf(POC_COG, coords = c("centroid_longitude", "centroid_latitude"))
@@ -523,7 +525,7 @@ str(POC_DtoB)
 
 ```
 
-### Trends in Distance to Shared Border 
+### Timeseries: Distance to Shared Border 
 
 ```{r DtoB plot, echo=FALSE, fig.width=6, fig.height=4}
 ggplot(POC_DtoB, 
@@ -536,3 +538,12 @@ ggplot(POC_DtoB,
 
 ```
 
+## 7. Scaled Slopes
+
+lm slopes for 2006-2023 (the period when the water began warming rapidly), scaled  so that all indicators are in the same units
+
+```{r DtoB data, echo=FALSE}
+Scaled_Slopes<-read.csv(here::here("Data/Data_SHinyApp_Proof_of_Concept/Scaled_Slopes_all_indicators.csv"))
+str(Scaled_Slopes)
+
+```
