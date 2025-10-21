@@ -440,8 +440,7 @@ merged_coefficients_df <- merged_coefficients_df %>%
  str(merged_coefficients_df)
  merged_coefficients_df$p.significant <- factor(merged_coefficients_df$p.significant, 
                           levels = c("Very strong", "Strong","Moderate",  "Not significant"))
- merged_coefficients_df<-read.csv(here::here("Data/Data_SHinyApp_Proof_of_Concept/Scaled_Slopes_all_indicators.csv"))
- 
+ library(ggplot2)
  #plot
  ggplot(merged_coefficients_df, 
         aes(x = estimate, 
@@ -476,3 +475,7 @@ merged_coefficients_df <- merged_coefficients_df %>%
    )
  
 write.csv(merged_coefficients_df,(here::here("Data/Data_SHinyApp_Proof_of_Concept/Scaled_Slopes_all_indicators.csv")), row.names = FALSE)
+
+str(merged_coefficients_df)
+
+
