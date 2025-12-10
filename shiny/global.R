@@ -35,8 +35,6 @@ source)
 source("app_text.R")
 
 
-
-
 # set theme ---------------------------------------------------------------
 # make some minimal theme changes - color of primary and secondary items
 theme <- create_theme(
